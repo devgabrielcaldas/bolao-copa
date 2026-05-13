@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Bolão da Copa | Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="./src/css/base/reset.css">
+  <link rel="stylesheet" href="./src/css/base/variables.css">
+  <link rel="stylesheet" href="./src/css/base/global.css">
+
+  <link rel="stylesheet" href="./src/css/components/button.css">
+  <link rel="stylesheet" href="./src/css/components/card.css">
+  <link rel="stylesheet" href="./src/css/components/form.css">
+  <link rel="stylesheet" href="./src/css/components/toast.css">
+
+  <link rel="stylesheet" href="./src/css/pages/dashboard.css">
+  <link rel="stylesheet" href="./src/css/pages/admin.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <span>🏆</span>
+        <strong>Bolão Copa</strong>
+      </div>
+
+      <nav class="sidebar__nav">
+        <a href="./dashboard.html" class="sidebar__link">Dashboard</a>
+        <a href="./predictions.html" class="sidebar__link">Meus palpites</a>
+        <a href="./groups.html" class="sidebar__link">Grupos</a>
+        <a href="./special-predictions.html" class="sidebar__link">Especiais</a>
+        <a href="./ranking.html" class="sidebar__link">Ranking</a>
+        <a href="./admin.html" class="sidebar__link sidebar__link--active">Admin</a>
+      </nav>
+
+      <button id="logoutButton" class="button button--ghost sidebar__logout">
+        Sair
+      </button>
+    </aside>
+
+    <main class="admin-page">
+      <header class="admin-header">
+        <div>
+          <p class="dashboard__eyebrow">Painel administrativo</p>
+          <h1>Admin do bolão</h1>
+          <p>
+            Cadastre resultados dos jogos, classificação real dos grupos e resultados oficiais da Copa.
+          </p>
+        </div>
+
+        <button id="themeToggle" class="button button--ghost">
+          Alternar tema
+        </button>
+      </header>
+
+      <section id="adminBlockedMessage" class="card admin-blocked-message">
+        <span>🔒</span>
+        <h2>Acesso restrito</h2>
+        <p>Somente administradores podem acessar essa área.</p>
+      </section>
+
+      <section id="adminContent" class="admin-content">
+        <section class="admin-summary">
+          <article class="card admin-summary__card">
+            <span>Jogos</span>
+            <strong id="totalMatches">0</strong>
+          </article>
+
+          <article class="card admin-summary__card">
+            <span>Resultados cadastrados</span>
+            <strong id="totalMatchResults">0</strong>
+          </article>
+
+          <article class="card admin-summary__card">
+            <span>Grupos oficiais</span>
+            <strong id="totalGroupStandings">0</strong>
+          </article>
+        </section>
+
+        <section class="card admin-section">
+          <div class="admin-section__header">
+            <div>
+              <h2>Resultados dos jogos</h2>
+              <p>Informe o placar real de cada partida para calcular os pontos dos palpites.</p>
+            </div>
+          </div>
+
+          <div class="admin-filters">
+            <button class="admin-filter-button is-active" data-group="all">Todos</button>
+            <button class="admin-filter-button" data-group="Grupo A">Grupo A</button>
+            <button class="admin-filter-button" data-group="Grupo B">Grupo B</button>
+            <button class="admin-filter-button" data-group="Grupo C">Grupo C</button>
+            <button class="admin-filter-button" data-group="Grupo D">Grupo D</button>
+            <button class="admin-filter-button" data-group="Grupo E">Grupo E</button>
+            <button class="admin-filter-button" data-group="Grupo F">Grupo F</button>
+            <button class="admin-filter-button" data-group="Grupo G">Grupo G</button>
+            <button class="admin-filter-button" data-group="Grupo H">Grupo H</button>
+            <button class="admin-filter-button" data-group="Grupo I">Grupo I</button>
+            <button class="admin-filter-button" data-group="Grupo J">Grupo J</button>
+            <button class="admin-filter-button" data-group="Grupo K">Grupo K</button>
+            <button class="admin-filter-button" data-group="Grupo L">Grupo L</button>
+          </div>
+
+          <div id="adminMatchesList" class="admin-matches-list"></div>
+        </section>
+
+        <section class="card admin-section">
+          <div class="admin-section__header">
+            <div>
+              <h2>Classificação real dos grupos</h2>
+              <p>Cadastre a ordem final oficial de cada grupo.</p>
+            </div>
+          </div>
+
+          <div id="adminGroupsList" class="admin-groups-list"></div>
+        </section>
+
+        <section class="card admin-section">
+          <div class="admin-section__header">
+            <div>
+              <h2>Resultado oficial da Copa</h2>
+              <p>Cadastre campeão, vice-campeão e artilheiro oficial.</p>
+            </div>
+          </div>
+
+          <form id="officialResultForm" class="official-form">
+            <div class="official-form__group">
+              <label for="officialChampion">Campeão oficial</label>
+              <select id="officialChampion" name="champion" required></select>
+            </div>
+
+            <div class="official-form__group">
+              <label for="officialRunnerUp">Vice-campeão oficial</label>
+              <select id="officialRunnerUp" name="runnerUp" required></select>
+            </div>
+
+            <div class="official-form__group">
+              <label for="officialTopScorer">Artilheiro oficial</label>
+              <select id="officialTopScorer" name="topScorer" required></select>
+            </div>
+
+            <button type="submit" class="button button--primary">
+              Salvar resultado oficial
+            </button>
+          </form>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./src/js/pages/admin-page.js"></script>
+</body>
+</html>

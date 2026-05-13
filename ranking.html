@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Bolão da Copa | Ranking</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="./src/css/base/reset.css">
+  <link rel="stylesheet" href="./src/css/base/variables.css">
+  <link rel="stylesheet" href="./src/css/base/global.css">
+
+  <link rel="stylesheet" href="./src/css/components/button.css">
+  <link rel="stylesheet" href="./src/css/components/card.css">
+
+  <link rel="stylesheet" href="./src/css/pages/dashboard.css">
+  <link rel="stylesheet" href="./src/css/pages/ranking.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <span>🏆</span>
+        <strong>Bolão Copa</strong>
+      </div>
+
+      <nav class="sidebar__nav">
+        <a href="./dashboard.html" class="sidebar__link">Dashboard</a>
+        <a href="./predictions.html" class="sidebar__link">Meus palpites</a>
+        <a href="./groups.html" class="sidebar__link">Grupos</a>
+        <a href="./special-predictions.html" class="sidebar__link">Especiais</a>
+        <a href="./ranking.html" class="sidebar__link sidebar__link--active">Ranking</a>
+        <a href="./admin.html" class="sidebar__link">Admin</a>
+      </nav>
+
+      <button id="logoutButton" class="button button--ghost sidebar__logout">
+        Sair
+      </button>
+    </aside>
+
+    <main class="ranking-page">
+      <header class="ranking-header">
+        <div>
+          <p class="dashboard__eyebrow">Classificação geral</p>
+          <h1>Ranking do bolão</h1>
+          <p>
+            Acompanhe a pontuação geral, critérios de desempate e desempenho de cada participante.
+          </p>
+        </div>
+
+        <button id="themeToggle" class="button button--ghost">
+          Alternar tema
+        </button>
+      </header>
+
+      <section id="podium" class="podium"></section>
+
+      <section class="ranking-rules card">
+        <span>Critérios de desempate</span>
+        <p>
+          Pontuação total, placares exatos, acertos de vencedor/empate, pontos especiais, pontos de grupos e ordem alfabética.
+        </p>
+      </section>
+
+      <section class="card ranking-table-card">
+        <div class="ranking-table-card__header">
+          <div>
+            <h2>Classificação completa</h2>
+            <p>Detalhamento dos pontos por participante.</p>
+          </div>
+        </div>
+
+        <div class="ranking-table-wrapper">
+          <table class="ranking-table">
+            <thead>
+              <tr>
+                <th>Pos.</th>
+                <th>Participante</th>
+                <th>Total</th>
+                <th>Jogos</th>
+                <th>Exatos</th>
+                <th>Vencedor/Empate</th>
+                <th>Grupos</th>
+                <th>Especiais</th>
+              </tr>
+            </thead>
+
+            <tbody id="rankingTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./src/js/pages/ranking-page.js"></script>
+</body>
+</html>

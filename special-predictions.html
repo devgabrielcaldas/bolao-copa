@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Bolão da Copa | Palpites Especiais</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="./src/css/base/reset.css">
+  <link rel="stylesheet" href="./src/css/base/variables.css">
+  <link rel="stylesheet" href="./src/css/base/global.css">
+
+  <link rel="stylesheet" href="./src/css/components/button.css">
+  <link rel="stylesheet" href="./src/css/components/card.css">
+  <link rel="stylesheet" href="./src/css/components/form.css">
+  <link rel="stylesheet" href="./src/css/components/toast.css">
+
+  <link rel="stylesheet" href="./src/css/pages/dashboard.css">
+  <link rel="stylesheet" href="./src/css/pages/special-predictions.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <span>🏆</span>
+        <strong>Bolão Copa</strong>
+      </div>
+
+      <nav class="sidebar__nav">
+        <a href="./dashboard.html" class="sidebar__link">Dashboard</a>
+        <a href="./predictions.html" class="sidebar__link">Meus palpites</a>
+        <a href="./groups.html" class="sidebar__link">Grupos</a>
+        <a href="./special-predictions.html" class="sidebar__link sidebar__link--active">Especiais</a>
+        <a href="./ranking.html" class="sidebar__link">Ranking</a>
+        <a href="./admin.html" class="sidebar__link">Admin</a>
+      </nav>
+
+      <button id="logoutButton" class="button button--ghost sidebar__logout">
+        Sair
+      </button>
+    </aside>
+
+    <main class="special-page">
+      <header class="special-header">
+        <div>
+          <p class="dashboard__eyebrow">Palpites antes da Copa</p>
+          <h1>Palpites especiais</h1>
+          <p>
+            Escolha seu campeão, vice-campeão e artilheiro da Copa. Esses palpites valem pontos extras no ranking.
+          </p>
+        </div>
+
+        <button id="themeToggle" class="button button--ghost">
+          Alternar tema
+        </button>
+      </header>
+
+      <section class="special-summary">
+        <article class="card special-summary__card">
+          <span>Campeão</span>
+          <strong>5 pts</strong>
+        </article>
+
+        <article class="card special-summary__card">
+          <span>Vice-campeão</span>
+          <strong>2 pts</strong>
+        </article>
+
+        <article class="card special-summary__card">
+          <span>Artilheiro</span>
+          <strong>5 pts</strong>
+        </article>
+      </section>
+
+      <section class="special-info card">
+        <span>⏰</span>
+        <p id="lockInfo">
+          Esses palpites bloqueiam antes do início da Copa.
+        </p>
+      </section>
+
+      <section class="card special-card">
+        <div class="special-card__header">
+          <div>
+            <h2>Suas escolhas</h2>
+            <p>Você pode alterar enquanto o prazo estiver aberto.</p>
+          </div>
+
+          <span id="statusBadge" class="special-card__badge">
+            Aberto
+          </span>
+        </div>
+
+        <form id="specialPredictionForm" class="special-form">
+          <div class="special-form__group">
+            <label for="champion">Campeão</label>
+            <select id="champion" name="champion" required></select>
+          </div>
+
+          <div class="special-form__group">
+            <label for="runnerUp">Vice-campeão</label>
+            <select id="runnerUp" name="runnerUp" required></select>
+          </div>
+
+          <div class="special-form__group">
+            <label for="topScorer">Artilheiro</label>
+            <select id="topScorer" name="topScorer" required></select>
+          </div>
+
+          <button id="saveSpecialButton" class="button button--primary" type="submit">
+            Salvar palpites especiais
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./src/js/pages/special-predictions-page.js"></script>
+</body>
+</html>

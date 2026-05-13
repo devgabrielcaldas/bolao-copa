@@ -1,0 +1,21 @@
+body {
+  font-family: var(--font-family);
+  background:
+    radial-gradient(circle at top left, rgba(34, 197, 94, 0.16), transparent 32rem),
+    radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.14), transparent 28rem),
+    var(--color-background);
+  color: var(--color-text);
+  transition:
+    background-color var(--transition-default),
+    color var(--transition-default);
+}
+
+::selection {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.container {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+}
