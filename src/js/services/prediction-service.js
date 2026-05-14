@@ -1,5 +1,6 @@
 import {
   findAllPredictions,
+  findPredictionsByUserId,
   findPredictionByUserAndMatch,
   upsertPrediction,
   countPredictionsByUserId
@@ -7,6 +8,22 @@ import {
 
 export async function getAllPredictions() {
   const predictions = await findAllPredictions();
+
+  return predictions.map((prediction) => {
+    return {
+      id: prediction.id,
+      userId: prediction.user_id,
+      matchId: prediction.match_id,
+      homeScore: prediction.home_score,
+      awayScore: prediction.away_score,
+      createdAt: prediction.created_at,
+      updatedAt: prediction.updated_at
+    };
+  });
+}
+
+export async function getPredictionsByUser(userId) {
+  const predictions = await findPredictionsByUserId(userId);
 
   return predictions.map((prediction) => {
     return {

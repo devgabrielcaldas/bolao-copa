@@ -14,6 +14,21 @@ export async function findAllPredictions() {
   return data;
 }
 
+export async function findPredictionsByUserId(userId) {
+  const { data, error } = await supabaseClient
+    .from("predictions")
+    .select("*")
+    .eq("user_id", userId)
+    .order("match_id", { ascending: true });
+
+  if (error) {
+    console.error("Erro ao buscar palpites do usuário:", error);
+    return [];
+  }
+
+  return data;
+}
+
 export async function findPredictionByUserAndMatch(userId, matchId) {
   const { data, error } = await supabaseClient
     .from("predictions")

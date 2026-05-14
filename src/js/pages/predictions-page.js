@@ -7,9 +7,8 @@ import { getTheme, saveTheme } from "../utils/storage-utils.js";
 import { matchesMock } from "../data/matches.mock.js";
 
 import {
-  getPredictionByUserAndMatch,
-  savePrediction,
-  countPredictionsByUser
+  getPredictionsByUser,
+  savePrediction
 } from "../services/prediction-service.js";
 
 import {
@@ -32,6 +31,7 @@ const roundFilterButtons = document.querySelectorAll("[data-round]");
 let currentUser = null;
 let currentGroupFilter = "all";
 let currentRoundFilter = "all";
+let userPredictions = [];
 
 function applySavedTheme() {
   const savedTheme = getTheme();
@@ -61,6 +61,12 @@ function isMatchReadyForPrediction(match) {
   return Boolean(match.homeTeam && match.awayTeam);
 }
 
+function getPredictionByMatchId(matchId) {
+  return userPredictions.find((prediction) => {
+    return Number(prediction.matchId) === Number(matchId);
+  });
+}
+
 function getFilteredMatches() {
   return matchesMock.filter((match) => {
     const matchesGroup =
@@ -73,20 +79,22 @@ function getFilteredMatches() {
   });
 }
 
-async function renderSummary() {
-  const userPredictionsCount = await countPredictionsByUser(currentUser.id);
+async function loadUserPredictions() {
+  userPredictions = await getPredictionsByUser(currentUser.id);
+}
 
+function renderSummary() {
   const lockedMatchesCount = matchesMock.filter((match) => {
     return !canEditPrediction(match.startsAt);
   }).length;
 
   totalMatches.textContent = matchesMock.length;
-  totalPredictions.textContent = userPredictionsCount;
+  totalPredictions.textContent = userPredictions.length;
   totalLocked.textContent = lockedMatchesCount;
 }
 
-async function createMatchCard(match) {
-  const prediction = await getPredictionByUserAndMatch(currentUser.id, match.id);
+function createMatchCard(match) {
+  const prediction = getPredictionByMatchId(match.id);
 
   const canEdit = canEditPrediction(match.startsAt);
   const matchReady = isMatchReadyForPrediction(match);
@@ -165,7 +173,7 @@ async function createMatchCard(match) {
   `;
 }
 
-async function renderMatches() {
+function renderMatches() {
   const filteredMatches = getFilteredMatches();
 
   if (filteredMatches.length === 0) {
@@ -180,19 +188,7 @@ async function renderMatches() {
     return;
   }
 
-  matchesList.innerHTML = `
-    <div class="card empty-state">
-      <span>⏳</span>
-      <h3>Carregando jogos</h3>
-      <p>Buscando seus palpites no Supabase...</p>
-    </div>
-  `;
-
-  const cards = await Promise.all(
-    filteredMatches.map((match) => createMatchCard(match))
-  );
-
-  matchesList.innerHTML = cards.join("");
+  matchesList.innerHTML = filteredMatches.map(createMatchCard).join("");
 
   attachPredictionFormEvents();
 }
@@ -219,7 +215,7 @@ async function handleSavePrediction(event) {
 
   if (!canEditPrediction(match.startsAt)) {
     showToast("O prazo para esse palpite já encerrou.", "warning");
-    await renderMatches();
+    renderMatches();
     return;
   }
 
@@ -241,17 +237,19 @@ async function handleSavePrediction(event) {
       awayScore
     });
 
-    await renderSummary();
-    await renderMatches();
+    await loadUserPredictions();
 
-    showToast("Palpite salvo com sucesso no Supabase!", "success");
+    renderSummary();
+    renderMatches();
+
+    showToast("Palpite salvo com sucesso!", "success");
   } catch (error) {
     console.error(error);
     showToast("Não foi possível salvar o palpite.", "error");
   }
 }
 
-async function handleGroupFilterClick(event) {
+function handleGroupFilterClick(event) {
   const selectedButton = event.currentTarget;
 
   groupFilterButtons.forEach((button) => {
@@ -262,10 +260,10 @@ async function handleGroupFilterClick(event) {
 
   currentGroupFilter = selectedButton.dataset.group;
 
-  await renderMatches();
+  renderMatches();
 }
 
-async function handleRoundFilterClick(event) {
+function handleRoundFilterClick(event) {
   const selectedButton = event.currentTarget;
 
   roundFilterButtons.forEach((button) => {
@@ -276,7 +274,7 @@ async function handleRoundFilterClick(event) {
 
   currentRoundFilter = selectedButton.dataset.round;
 
-  await renderMatches();
+  renderMatches();
 }
 
 async function initPredictionsPage() {
@@ -288,8 +286,18 @@ async function initPredictionsPage() {
     return;
   }
 
-  await renderSummary();
-  await renderMatches();
+  matchesList.innerHTML = `
+    <div class="card empty-state">
+      <span>⏳</span>
+      <h3>Carregando jogos</h3>
+      <p>Buscando seus palpites...</p>
+    </div>
+  `;
+
+  await loadUserPredictions();
+
+  renderSummary();
+  renderMatches();
 
   logoutButton.addEventListener("click", logout);
   themeToggle.addEventListener("click", toggleTheme);
