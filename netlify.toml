@@ -1,0 +1,14 @@
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/src/js/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/src/css/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
