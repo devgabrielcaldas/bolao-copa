@@ -11,10 +11,8 @@ import { playersMock } from "../data/players.mock.js";
 
 import {
   getMatchResults,
-  getMatchResultByMatchId,
   saveMatchResult,
   getActualGroupStandings,
-  getActualGroupStandingByGroup,
   saveActualGroupStanding,
   getOfficialResult,
   saveOfficialResult
@@ -46,6 +44,10 @@ const officialTopScorerSelect = document.querySelector("#officialTopScorer");
 let currentUser = null;
 let currentGroupFilter = "all";
 
+let matchResults = [];
+let actualGroupStandings = [];
+let officialResult = null;
+
 function applySavedTheme() {
   const savedTheme = getTheme();
 
@@ -71,13 +73,26 @@ function renderAccessControl() {
   return isAdmin;
 }
 
-async function renderSummary() {
-  const matchResults = await getMatchResults();
-  const groupStandings = await getActualGroupStandings();
+async function loadAdminData() {
+  const [
+    loadedMatchResults,
+    loadedGroupStandings,
+    loadedOfficialResult
+  ] = await Promise.all([
+    getMatchResults(),
+    getActualGroupStandings(),
+    getOfficialResult()
+  ]);
 
+  matchResults = loadedMatchResults;
+  actualGroupStandings = loadedGroupStandings;
+  officialResult = loadedOfficialResult;
+}
+
+function renderSummary() {
   totalMatches.textContent = matchesMock.length;
   totalMatchResults.textContent = matchResults.length;
-  totalGroupStandings.textContent = groupStandings.length;
+  totalGroupStandings.textContent = actualGroupStandings.length;
 }
 
 function getTeamName(match, side) {
@@ -98,8 +113,14 @@ function getFilteredMatches() {
   });
 }
 
-async function createAdminMatchCard(match) {
-  const result = await getMatchResultByMatchId(match.id);
+function getMatchResultById(matchId) {
+  return matchResults.find((result) => {
+    return Number(result.matchId) === Number(matchId);
+  });
+}
+
+function createAdminMatchCard(match) {
+  const result = getMatchResultById(match.id);
 
   const homeScore = result?.homeScore ?? "";
   const awayScore = result?.awayScore ?? "";
@@ -113,7 +134,7 @@ async function createAdminMatchCard(match) {
         </div>
 
         <span>
-          ${result ? "Resultado cadastrado no Supabase" : "Sem resultado"}
+          ${result ? "Resultado cadastrado" : "Sem resultado"}
         </span>
       </div>
 
@@ -148,22 +169,10 @@ async function createAdminMatchCard(match) {
   `;
 }
 
-async function renderMatches() {
+function renderMatches() {
   const matches = getFilteredMatches();
 
-  adminMatchesList.innerHTML = `
-    <div class="card empty-state">
-      <span>⏳</span>
-      <h3>Carregando jogos</h3>
-      <p>Buscando resultados no Supabase...</p>
-    </div>
-  `;
-
-  const cards = await Promise.all(
-    matches.map((match) => createAdminMatchCard(match))
-  );
-
-  adminMatchesList.innerHTML = cards.join("");
+  adminMatchesList.innerHTML = matches.map(createAdminMatchCard).join("");
 
   attachMatchResultEvents();
 }
@@ -191,17 +200,19 @@ async function handleSaveMatchResult(event) {
       awayScore: Number(formData.get("awayScore"))
     });
 
-    await renderSummary();
-    await renderMatches();
+    matchResults = await getMatchResults();
 
-    showToast("Resultado do jogo salvo com sucesso no Supabase!", "success");
+    renderSummary();
+    renderMatches();
+
+    showToast("Resultado do jogo salvo com sucesso!", "success");
   } catch (error) {
     console.error(error);
     showToast("Não foi possível salvar o resultado do jogo.", "error");
   }
 }
 
-async function handleGroupFilterClick(event) {
+function handleGroupFilterClick(event) {
   const selectedButton = event.currentTarget;
 
   groupFilterButtons.forEach((button) => {
@@ -212,7 +223,7 @@ async function handleGroupFilterClick(event) {
 
   currentGroupFilter = selectedButton.dataset.group;
 
-  await renderMatches();
+  renderMatches();
 }
 
 function createTeamOptions(group, selectedTeam) {
@@ -227,8 +238,14 @@ function createTeamOptions(group, selectedTeam) {
   }).join("");
 }
 
-async function createAdminGroupCard(group) {
-  const standing = await getActualGroupStandingByGroup(group.code);
+function getGroupStandingByCode(groupCode) {
+  return actualGroupStandings.find((standing) => {
+    return standing.groupCode === groupCode;
+  });
+}
+
+function createAdminGroupCard(group) {
+  const standing = getGroupStandingByCode(group.code);
 
   const positions = standing?.positions || [
     group.teams[0],
@@ -278,20 +295,8 @@ async function createAdminGroupCard(group) {
   `;
 }
 
-async function renderGroups() {
-  adminGroupsList.innerHTML = `
-    <div class="card empty-state">
-      <span>⏳</span>
-      <h3>Carregando grupos</h3>
-      <p>Buscando classificações no Supabase...</p>
-    </div>
-  `;
-
-  const cards = await Promise.all(
-    groupsMock.map((group) => createAdminGroupCard(group))
-  );
-
-  adminGroupsList.innerHTML = cards.join("");
+function renderGroups() {
+  adminGroupsList.innerHTML = groupsMock.map(createAdminGroupCard).join("");
 
   attachGroupStandingEvents();
 }
@@ -334,10 +339,12 @@ async function handleSaveGroupStanding(event) {
       positions
     });
 
-    await renderSummary();
-    await renderGroups();
+    actualGroupStandings = await getActualGroupStandings();
 
-    showToast("Classificação oficial salva com sucesso no Supabase!", "success");
+    renderSummary();
+    renderGroups();
+
+    showToast("Classificação oficial salva com sucesso!", "success");
   } catch (error) {
     console.error(error);
     showToast("Não foi possível salvar a classificação oficial.", "error");
@@ -368,9 +375,7 @@ function createOfficialPlayerOptions(selectedPlayerId) {
   }).join("");
 }
 
-async function renderOfficialResultForm() {
-  const officialResult = await getOfficialResult();
-
+function renderOfficialResultForm() {
   officialChampionSelect.innerHTML = createOfficialTeamOptions(
     officialResult?.champion
   );
@@ -414,9 +419,11 @@ async function handleSaveOfficialResult(event) {
       topScorerTeam: selectedPlayer.team
     });
 
-    await renderOfficialResultForm();
+    officialResult = await getOfficialResult();
 
-    showToast("Resultado oficial da Copa salvo com sucesso no Supabase!", "success");
+    renderOfficialResultForm();
+
+    showToast("Resultado oficial da Copa salvo com sucesso!", "success");
   } catch (error) {
     console.error(error);
     showToast("Não foi possível salvar o resultado oficial.", "error");
@@ -441,10 +448,28 @@ async function initAdminPage() {
     return;
   }
 
-  await renderSummary();
-  await renderMatches();
-  await renderGroups();
-  await renderOfficialResultForm();
+  adminMatchesList.innerHTML = `
+    <div class="card empty-state">
+      <span>⏳</span>
+      <h3>Carregando jogos</h3>
+      <p>Buscando dados do Supabase...</p>
+    </div>
+  `;
+
+  adminGroupsList.innerHTML = `
+    <div class="card empty-state">
+      <span>⏳</span>
+      <h3>Carregando grupos</h3>
+      <p>Buscando classificações oficiais...</p>
+    </div>
+  `;
+
+  await loadAdminData();
+
+  renderSummary();
+  renderMatches();
+  renderGroups();
+  renderOfficialResultForm();
 
   groupFilterButtons.forEach((button) => {
     button.addEventListener("click", handleGroupFilterClick);
