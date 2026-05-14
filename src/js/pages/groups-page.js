@@ -7,9 +7,8 @@ import { getTheme, saveTheme } from "../utils/storage-utils.js";
 import { groupsMock } from "../data/groups.mock.js";
 
 import {
-  getGroupPredictionByUserAndGroup,
-  saveGroupPrediction,
-  countGroupPredictionsByUser
+  getGroupPredictionsByUser,
+  saveGroupPrediction
 } from "../services/group-prediction-service.js";
 
 import { formatMatchDate } from "../utils/date-utils.js";
@@ -22,6 +21,7 @@ const totalGroups = document.querySelector("#totalGroups");
 const totalGroupPredictions = document.querySelector("#totalGroupPredictions");
 
 let currentUser = null;
+let userGroupPredictions = [];
 
 function applySavedTheme() {
   const savedTheme = getTheme();
@@ -46,11 +46,19 @@ function canEditGroupPrediction(lockAt) {
   return now < lockDate;
 }
 
-async function renderSummary() {
+async function loadUserGroupPredictions() {
+  userGroupPredictions = await getGroupPredictionsByUser(currentUser.id);
+}
+
+function getGroupPredictionByCode(groupCode) {
+  return userGroupPredictions.find((prediction) => {
+    return prediction.groupCode === groupCode;
+  });
+}
+
+function renderSummary() {
   totalGroups.textContent = groupsMock.length;
-  totalGroupPredictions.textContent = await countGroupPredictionsByUser(
-    currentUser.id
-  );
+  totalGroupPredictions.textContent = userGroupPredictions.length;
 }
 
 function createTeamOptions(group, selectedTeam) {
@@ -65,11 +73,8 @@ function createTeamOptions(group, selectedTeam) {
   }).join("");
 }
 
-async function createGroupCard(group) {
-  const prediction = await getGroupPredictionByUserAndGroup(
-    currentUser.id,
-    group.code
-  );
+function createGroupCard(group) {
+  const prediction = getGroupPredictionByCode(group.code);
 
   const canEdit = canEditGroupPrediction(group.lockAt);
   const isLocked = !canEdit;
@@ -125,7 +130,7 @@ async function createGroupCard(group) {
 
         <div class="group-card__footer">
           <p class="group-card__status">
-            ${prediction ? "Palpite salvo no Supabase" : "Ainda não salvo"}
+            ${prediction ? "Palpite salvo" : "Ainda não salvo"}
           </p>
 
           <button class="button button--primary" type="submit" ${isLocked ? "disabled" : ""}>
@@ -137,20 +142,8 @@ async function createGroupCard(group) {
   `;
 }
 
-async function renderGroups() {
-  groupsList.innerHTML = `
-    <div class="card empty-state">
-      <span>⏳</span>
-      <h3>Carregando grupos</h3>
-      <p>Buscando seus palpites no Supabase...</p>
-    </div>
-  `;
-
-  const cards = await Promise.all(
-    groupsMock.map((group) => createGroupCard(group))
-  );
-
-  groupsList.innerHTML = cards.join("");
+function renderGroups() {
+  groupsList.innerHTML = groupsMock.map(createGroupCard).join("");
 
   attachGroupFormEvents();
 }
@@ -182,7 +175,7 @@ async function handleSaveGroupPrediction(event) {
 
   if (!canEditGroupPrediction(group.lockAt)) {
     showToast("O prazo para esse grupo já encerrou.", "warning");
-    await renderGroups();
+    renderGroups();
     return;
   }
 
@@ -210,10 +203,12 @@ async function handleSaveGroupPrediction(event) {
       positions
     });
 
-    await renderSummary();
-    await renderGroups();
+    await loadUserGroupPredictions();
 
-    showToast("Palpite do grupo salvo com sucesso no Supabase!", "success");
+    renderSummary();
+    renderGroups();
+
+    showToast("Palpite do grupo salvo com sucesso!", "success");
   } catch (error) {
     console.error(error);
     showToast("Não foi possível salvar o palpite do grupo.", "error");
@@ -229,8 +224,18 @@ async function initGroupsPage() {
     return;
   }
 
-  await renderSummary();
-  await renderGroups();
+  groupsList.innerHTML = `
+    <div class="card empty-state">
+      <span>⏳</span>
+      <h3>Carregando grupos</h3>
+      <p>Buscando seus palpites...</p>
+    </div>
+  `;
+
+  await loadUserGroupPredictions();
+
+  renderSummary();
+  renderGroups();
 
   logoutButton.addEventListener("click", logout);
   themeToggle.addEventListener("click", toggleTheme);

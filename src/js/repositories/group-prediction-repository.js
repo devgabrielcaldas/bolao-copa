@@ -14,6 +14,21 @@ export async function findAllGroupPredictions() {
   return data;
 }
 
+export async function findGroupPredictionsByUserId(userId) {
+  const { data, error } = await supabaseClient
+    .from("group_predictions")
+    .select("*")
+    .eq("user_id", userId)
+    .order("group_code", { ascending: true });
+
+  if (error) {
+    console.error("Erro ao buscar palpites de grupos do usuário:", error);
+    return [];
+  }
+
+  return data;
+}
+
 export async function findGroupPredictionByUserAndGroup(userId, groupCode) {
   const { data, error } = await supabaseClient
     .from("group_predictions")
