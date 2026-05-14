@@ -1,7 +1,7 @@
 export const teamsMock = [
   "México",
   "África do Sul",
-  "República da Coreia",
+  "Coreia do Sul",
   "República Tcheca",
   "Canadá",
   "Bósnia e Herzegovina",
@@ -40,7 +40,7 @@ export const teamsMock = [
   "Argentina",
   "Argélia",
   "Portugal",
-  "República Democrática do Congo",
+  "Congo",
   "Uzbequistão",
   "Colômbia",
   "Inglaterra",

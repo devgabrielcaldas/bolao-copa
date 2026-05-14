@@ -58,5 +58,35 @@ export const playersMock = [
     id: 12,
     name: "Jamal Musiala",
     team: "Alemanha"
+  },
+  {
+    id: 13,
+    name: "Lamine Yamal",
+    team: "Espanha"
+  },
+  {
+    id: 14,
+    name: "Neymar Júnior",
+    team: "Brasil"
+  },
+  {
+    id: 15,
+    name: "Nick Woltemade",
+    team: "Alemanha"
+  },
+  {
+    id: 16,
+    name: "Ousmane Dembélé",
+    team: "França"
+  },
+  {
+    id: 17,
+    name: "Viktor Gyökeres",
+    team: "Suécia"
+  },
+  {
+    id: 18,
+    name: "Raphinha Belloli",
+    team: "Brasil"
   }
 ];

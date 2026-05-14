@@ -5,7 +5,7 @@ export const groupsMock = [
     teams: [
       "México",
       "África do Sul",
-      "República da Coreia",
+      "Coreia do Sul",
       "República Tcheca"
     ]
   },
@@ -104,7 +104,7 @@ export const groupsMock = [
     lockAt: "2026-06-17T13:59:00",
     teams: [
       "Portugal",
-      "República Democrática do Congo",
+      "Congo",
       "Uzbequistão",
       "Colômbia"
     ]
