@@ -29,7 +29,8 @@ function createEmptyUserStats(user) {
     specialPoints: 0,
     exactScores: 0,
     correctOutcomes: 0,
-    correctGroups: 0
+    correctGroups: 0,
+    predictionsCount: 0
   };
 }
 
@@ -215,7 +216,8 @@ export async function getRanking() {
         specialPoints: specialStats.total,
         exactScores: matchStats.exactScores,
         correctOutcomes: matchStats.correctOutcomes,
-        correctGroups: groupStats.correctGroups
+        correctGroups: groupStats.correctGroups,
+        predictionsCount: userPredictions.length
       };
     });
 
