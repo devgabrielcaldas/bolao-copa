@@ -19,3 +19,10 @@ body {
   width: min(1120px, calc(100% - 2rem));
   margin: 0 auto;
 }
+
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme textarea {
+  background: rgba(31, 58, 49, 0.95);
+  border-color: rgba(214, 255, 236, 0.12);
+}

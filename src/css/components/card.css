@@ -7,5 +7,6 @@
 }
 
 body.dark-theme .card {
-  background: rgba(15, 23, 42, 0.82);
+  background: rgba(23, 43, 36, 0.88);
+  border-color: rgba(214, 255, 236, 0.12);
 }

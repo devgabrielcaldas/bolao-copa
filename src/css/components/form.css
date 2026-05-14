@@ -48,3 +48,8 @@
 .form__error.is-visible {
   display: block;
 }
+
+body.dark-theme .form__group input {
+  background: rgba(31, 58, 49, 0.95);
+  border-color: rgba(214, 255, 236, 0.12);
+}
