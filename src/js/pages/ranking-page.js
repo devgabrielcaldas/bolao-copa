@@ -118,6 +118,28 @@ async function initRankingPage() {
     return;
   }
 
+  podium.innerHTML = `
+    <article class="card podium-card podium-card--first">
+      <div class="podium-card__position">⏳</div>
+      <h2 class="podium-card__name">Carregando ranking</h2>
+      <div class="podium-card__points">
+        ...
+        <span>pts</span>
+      </div>
+      <p class="podium-card__meta">
+        Buscando dados no Supabase...
+      </p>
+    </article>
+  `;
+
+  rankingTableBody.innerHTML = `
+    <tr>
+      <td colspan="8">
+        Carregando classificação...
+      </td>
+    </tr>
+  `;
+
   const ranking = await getRanking();
 
   renderPodium(ranking);

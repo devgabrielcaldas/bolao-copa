@@ -17,16 +17,54 @@ import {
   calculateSpecialPoints
 } from "../utils/score-utils.js";
 
-function getUserMatchStats(userId, allPredictions, matchesWithResults) {
-  const userPredictions = allPredictions.filter((prediction) => {
-    return Number(prediction.userId) === Number(userId);
-  });
+function createEmptyUserStats(user) {
+  return {
+    id: user.id,
+    name: user.name,
+    username: user.username,
+    role: user.role,
+    totalPoints: 0,
+    matchPoints: 0,
+    groupPoints: 0,
+    specialPoints: 0,
+    exactScores: 0,
+    correctOutcomes: 0,
+    correctGroups: 0
+  };
+}
 
+function groupByUserId(items) {
+  return items.reduce((accumulator, item) => {
+    const userId = Number(item.userId);
+
+    if (!accumulator.has(userId)) {
+      accumulator.set(userId, []);
+    }
+
+    accumulator.get(userId).push(item);
+
+    return accumulator;
+  }, new Map());
+}
+
+function createMatchesMap(matches) {
+  return matches.reduce((accumulator, match) => {
+    accumulator.set(Number(match.id), match);
+    return accumulator;
+  }, new Map());
+}
+
+function createGroupStandingsMap(standings) {
+  return standings.reduce((accumulator, standing) => {
+    accumulator.set(standing.groupCode, standing);
+    return accumulator;
+  }, new Map());
+}
+
+function calculateUserMatchStats(userPredictions, matchesMap) {
   return userPredictions.reduce(
     (accumulator, prediction) => {
-      const match = matchesWithResults.find((item) => {
-        return Number(item.id) === Number(prediction.matchId);
-      });
+      const match = matchesMap.get(Number(prediction.matchId));
 
       if (!match) {
         return accumulator;
@@ -54,16 +92,10 @@ function getUserMatchStats(userId, allPredictions, matchesWithResults) {
   );
 }
 
-function getUserGroupStats(userId, allGroupPredictions, actualStandings) {
-  const userGroupPredictions = allGroupPredictions.filter((prediction) => {
-    return Number(prediction.userId) === Number(userId);
-  });
-
+function calculateUserGroupStats(userGroupPredictions, groupStandingsMap) {
   return userGroupPredictions.reduce(
     (accumulator, prediction) => {
-      const actualStanding = actualStandings.find((standing) => {
-        return standing.groupCode === prediction.groupCode;
-      });
+      const actualStanding = groupStandingsMap.get(prediction.groupCode);
 
       const points = calculateGroupPoints(prediction, actualStanding);
 
@@ -82,12 +114,8 @@ function getUserGroupStats(userId, allGroupPredictions, actualStandings) {
   );
 }
 
-function getUserSpecialStats(userId, allSpecialPredictions, officialResult) {
-  const specialPrediction = allSpecialPredictions.find((prediction) => {
-    return Number(prediction.userId) === Number(userId);
-  });
-
-  return calculateSpecialPoints(specialPrediction, officialResult);
+function calculateUserSpecialStats(userSpecialPrediction, officialResult) {
+  return calculateSpecialPoints(userSpecialPrediction, officialResult);
 }
 
 function sortRanking(ranking) {
@@ -117,23 +145,7 @@ function sortRanking(ranking) {
 }
 
 function createEmptyRanking() {
-  return sortRanking(
-    usersMock.map((user) => {
-      return {
-        id: user.id,
-        name: user.name,
-        username: user.username,
-        role: user.role,
-        totalPoints: 0,
-        matchPoints: 0,
-        groupPoints: 0,
-        specialPoints: 0,
-        exactScores: 0,
-        correctOutcomes: 0,
-        correctGroups: 0
-      };
-    })
-  );
+  return sortRanking(usersMock.map(createEmptyUserStats));
 }
 
 export async function getRanking() {
@@ -154,22 +166,36 @@ export async function getRanking() {
       getOfficialResult()
     ]);
 
+    const matchesMap = createMatchesMap(matchesWithResults);
+    const groupStandingsMap = createGroupStandingsMap(actualStandings);
+
+    const predictionsByUserId = groupByUserId(allPredictions);
+    const groupPredictionsByUserId = groupByUserId(allGroupPredictions);
+
+    const specialPredictionByUserId = allSpecialPredictions.reduce(
+      (accumulator, prediction) => {
+        accumulator.set(Number(prediction.userId), prediction);
+        return accumulator;
+      },
+      new Map()
+    );
+
     const ranking = usersMock.map((user) => {
-      const matchStats = getUserMatchStats(
-        user.id,
-        allPredictions,
-        matchesWithResults
+      const userId = Number(user.id);
+
+      const userPredictions = predictionsByUserId.get(userId) || [];
+      const userGroupPredictions = groupPredictionsByUserId.get(userId) || [];
+      const userSpecialPrediction = specialPredictionByUserId.get(userId) || null;
+
+      const matchStats = calculateUserMatchStats(userPredictions, matchesMap);
+
+      const groupStats = calculateUserGroupStats(
+        userGroupPredictions,
+        groupStandingsMap
       );
 
-      const groupStats = getUserGroupStats(
-        user.id,
-        allGroupPredictions,
-        actualStandings
-      );
-
-      const specialStats = getUserSpecialStats(
-        user.id,
-        allSpecialPredictions,
+      const specialStats = calculateUserSpecialStats(
+        userSpecialPrediction,
         officialResult
       );
 
