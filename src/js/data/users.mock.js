@@ -70,5 +70,14 @@ export const usersMock = [
     password: "59314",
     role: "participant",
     points: 0
+  },
+  {
+    id: 999,
+    name: "Teste",
+    username: "teste",
+    password: "12345",
+    role: "demo",
+    points: 0,
+    isDemo: true
   }
 ];

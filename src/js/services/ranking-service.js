@@ -146,7 +146,11 @@ function sortRanking(ranking) {
 }
 
 function createEmptyRanking() {
-  return sortRanking(usersMock.map(createEmptyUserStats));
+  return sortRanking(
+    usersMock
+      .filter((user) => !user.isDemo)
+      .map(createEmptyUserStats)
+  );
 }
 
 export async function getRanking() {
@@ -181,7 +185,10 @@ export async function getRanking() {
       new Map()
     );
 
-    const ranking = usersMock.map((user) => {
+    const ranking = usersMock
+      .filter((user) => !user.isDemo)
+      .map((user) => {
+
       const userId = Number(user.id);
 
       const userPredictions = predictionsByUserId.get(userId) || [];
