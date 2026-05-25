@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Bolão da Copa | Comunidade</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="./src/css/base/reset.css">
+  <link rel="stylesheet" href="./src/css/base/variables.css">
+  <link rel="stylesheet" href="./src/css/base/global.css">
+
+  <link rel="stylesheet" href="./src/css/components/button.css">
+  <link rel="stylesheet" href="./src/css/components/card.css">
+  <link rel="stylesheet" href="./src/css/components/toast.css">
+
+  <link rel="stylesheet" href="./src/css/pages/dashboard.css">
+  <link rel="stylesheet" href="./src/css/pages/community.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <span>🏆</span>
+        <strong>Bolão Copa</strong>
+      </div>
+
+      <nav class="sidebar__nav">
+        <a href="./dashboard.html" class="sidebar__link">Dashboard</a>
+        <a href="./predictions.html" class="sidebar__link">Meus palpites</a>
+        <a href="./groups.html" class="sidebar__link">Grupos</a>
+        <a href="./special-predictions.html" class="sidebar__link">Especiais</a>
+        <a href="./ranking.html" class="sidebar__link">Ranking</a>
+        <a href="./community.html" class="sidebar__link sidebar__link--active">Comunidade</a>
+        <a href="./admin.html" class="sidebar__link">Admin</a>
+      </nav>
+
+      <button id="logoutButton" class="button button--ghost sidebar__logout">
+        Sair
+      </button>
+    </aside>
+
+    <main class="community-page">
+      <header class="community-header">
+        <div>
+          <p class="dashboard__eyebrow">Palpites da galera</p>
+          <h1>Comunidade</h1>
+          <p>
+            Veja os palpites dos participantes somente depois que cada jogo começar.
+          </p>
+        </div>
+
+        <button id="themeToggle" class="button button--ghost">
+          Alternar tema
+        </button>
+      </header>
+
+      <section class="community-info card">
+        <span>🔒</span>
+        <p>
+          Os palpites ficam escondidos até o horário de início do jogo. Depois disso, o card pode ser aberto para ver o que cada um colocou.
+        </p>
+      </section>
+
+      <section class="community-filter-area">
+        <div class="community-filter-group card">
+          <div class="community-filter-group__header">
+            <span>Filtrar por grupo</span>
+          </div>
+
+          <div class="community-filters" id="groupFilters">
+            <button class="community-filter-button is-active" data-group="all">Todos</button>
+            <button class="community-filter-button" data-group="Grupo A">Grupo A</button>
+            <button class="community-filter-button" data-group="Grupo B">Grupo B</button>
+            <button class="community-filter-button" data-group="Grupo C">Grupo C</button>
+            <button class="community-filter-button" data-group="Grupo D">Grupo D</button>
+            <button class="community-filter-button" data-group="Grupo E">Grupo E</button>
+            <button class="community-filter-button" data-group="Grupo F">Grupo F</button>
+            <button class="community-filter-button" data-group="Grupo G">Grupo G</button>
+            <button class="community-filter-button" data-group="Grupo H">Grupo H</button>
+            <button class="community-filter-button" data-group="Grupo I">Grupo I</button>
+            <button class="community-filter-button" data-group="Grupo J">Grupo J</button>
+            <button class="community-filter-button" data-group="Grupo K">Grupo K</button>
+            <button class="community-filter-button" data-group="Grupo L">Grupo L</button>
+          </div>
+        </div>
+
+        <div class="community-filter-group card">
+          <div class="community-filter-group__header">
+            <span>Filtrar por status</span>
+          </div>
+
+          <div class="community-filters" id="statusFilters">
+            <button class="community-filter-button is-active" data-status="all">Todos</button>
+            <button class="community-filter-button" data-status="available">Liberados</button>
+            <button class="community-filter-button" data-status="locked">Bloqueados</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="communityList" class="community-list"></section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./src/js/pages/community-page.js"></script>
+</body>
+</html>
