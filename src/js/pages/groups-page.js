@@ -13,6 +13,7 @@ import {
 
 import { formatMatchDate } from "../utils/date-utils.js";
 import { showToast } from "../components/toast.js";
+import { teamFlagsMock } from "../data/team-flags.mock.js";
 
 const logoutButton = document.querySelector("#logoutButton");
 const themeToggle = document.querySelector("#themeToggle");
@@ -44,6 +45,37 @@ function canEditGroupPrediction(lockAt) {
   const lockDate = new Date(lockAt);
 
   return now < lockDate;
+}
+
+function getTeamFlagUrl(teamName) {
+  const flagCode = teamFlagsMock[teamName];
+
+  if (!flagCode) {
+    return "";
+  }
+
+  return `https://flagcdn.com/w40/${flagCode}.png`;
+}
+
+function createFlagImage(teamName) {
+  const flagUrl = getTeamFlagUrl(teamName);
+
+  if (!flagUrl) {
+    return `
+      <span class="group-position__flag-placeholder">
+        ⚽
+      </span>
+    `;
+  }
+
+  return `
+    <img
+      class="group-position__flag"
+      src="${flagUrl}"
+      alt="Bandeira de ${teamName}"
+      loading="lazy"
+    >
+  `;
 }
 
 async function loadUserGroupPredictions() {
@@ -102,6 +134,11 @@ function createGroupCard(group) {
       <form class="group-form" data-group-form="${group.code}">
         <label class="group-position">
           <span class="group-position__number">1º</span>
+
+          <span class="group-position__flag-slot" data-flag-slot>
+            ${createFlagImage(positions[0])}
+          </span>
+
           <select name="first" ${isLocked ? "disabled" : ""}>
             ${createTeamOptions(group, positions[0])}
           </select>
@@ -109,6 +146,11 @@ function createGroupCard(group) {
 
         <label class="group-position">
           <span class="group-position__number">2º</span>
+
+          <span class="group-position__flag-slot" data-flag-slot>
+            ${createFlagImage(positions[1])}
+          </span>
+
           <select name="second" ${isLocked ? "disabled" : ""}>
             ${createTeamOptions(group, positions[1])}
           </select>
@@ -116,6 +158,11 @@ function createGroupCard(group) {
 
         <label class="group-position">
           <span class="group-position__number">3º</span>
+
+          <span class="group-position__flag-slot" data-flag-slot>
+            ${createFlagImage(positions[2])}
+          </span>
+
           <select name="third" ${isLocked ? "disabled" : ""}>
             ${createTeamOptions(group, positions[2])}
           </select>
@@ -123,6 +170,11 @@ function createGroupCard(group) {
 
         <label class="group-position">
           <span class="group-position__number">4º</span>
+
+          <span class="group-position__flag-slot" data-flag-slot>
+            ${createFlagImage(positions[3])}
+          </span>
+
           <select name="fourth" ${isLocked ? "disabled" : ""}>
             ${createTeamOptions(group, positions[3])}
           </select>
@@ -153,7 +205,25 @@ function attachGroupFormEvents() {
 
   forms.forEach((form) => {
     form.addEventListener("submit", handleSaveGroupPrediction);
+
+    const selects = form.querySelectorAll("select");
+
+    selects.forEach((select) => {
+      select.addEventListener("change", handleGroupSelectChange);
+    });
   });
+}
+
+function handleGroupSelectChange(event) {
+  const select = event.currentTarget;
+  const positionRow = select.closest(".group-position");
+  const flagSlot = positionRow.querySelector("[data-flag-slot]");
+
+  if (!flagSlot) {
+    return;
+  }
+
+  flagSlot.innerHTML = createFlagImage(select.value);
 }
 
 function hasRepeatedTeams(positions) {

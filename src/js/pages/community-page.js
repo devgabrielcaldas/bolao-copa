@@ -24,6 +24,25 @@ let communityUsers = [];
 let currentGroupFilter = "all";
 let currentStatusFilter = "all";
 
+function createCommunityAvatarHtml(user) {
+  if (user.avatarUrl) {
+    return `
+      <img
+        class="community-avatar"
+        src="${user.avatarUrl}"
+        alt="Foto de ${user.name}"
+        loading="lazy"
+      >
+    `;
+  }
+
+  return `
+    <span class="community-avatar community-avatar--fallback">
+      ${user.name.charAt(0).toUpperCase()}
+    </span>
+  `;
+}
+
 function applySavedTheme() {
   const savedTheme = getTheme();
 
@@ -77,9 +96,13 @@ function createPredictionRow(user, matchPredictions) {
   if (!prediction) {
     return `
       <article class="community-prediction">
-        <div class="community-prediction__user">
-          <strong>${user.name}</strong>
-          <span>Participante</span>
+        <<div class="community-prediction__user">
+          ${createCommunityAvatarHtml(user)}
+
+          <div>
+            <strong>${user.name}</strong>
+            <span>Participante</span>
+          </div>
         </div>
 
         <strong class="community-prediction__score community-prediction__empty">
@@ -92,8 +115,12 @@ function createPredictionRow(user, matchPredictions) {
   return `
     <article class="community-prediction">
       <div class="community-prediction__user">
-        <strong>${user.name}</strong>
-        <span>Participante</span>
+        ${createCommunityAvatarHtml(user)}
+
+        <div>
+          <strong>${user.name}</strong>
+          <span>Participante</span>
+        </div>
       </div>
 
       <strong class="community-prediction__score">

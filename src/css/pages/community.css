@@ -259,6 +259,43 @@
   color: var(--color-muted);
 }
 
+.community-prediction__user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.community-prediction__user > div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.community-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+  border: 2px solid rgba(34, 197, 94, 0.35);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+.community-avatar--fallback {
+  display: grid;
+  place-items: center;
+  background: var(--color-surface-soft);
+  color: var(--color-primary);
+  font-weight: 900;
+}
+
+@media (max-width: 720px) {
+  .community-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
 @media (max-width: 920px) {
   .community-page {
     padding: 1rem;

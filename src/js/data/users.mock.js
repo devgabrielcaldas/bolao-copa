@@ -5,7 +5,8 @@ export const usersMock = [
     username: "gabriel",
     password: "48291",
     role: "admin",
-    points: 0
+    points: 0,
+    avatarUrl: "./src/assets/fotos-perfil/gabriel.jpeg"
   },
   {
     id: 2,
@@ -13,7 +14,8 @@ export const usersMock = [
     username: "yan",
     password: "73518",
     role: "participant",
-    points: 0
+    points: 0,
+    avatarUrl: "./src/assets/fotos-perfil/yan.jpeg"
   },
   {
     id: 3,
@@ -21,7 +23,8 @@ export const usersMock = [
     username: "leonardo",
     password: "19647",
     role: "participant",
-    points: 0
+    points: 0,
+    avatarUrl: "./src/assets/fotos-perfil/leonardo.jpeg"
   },
   {
     id: 4,
@@ -29,7 +32,8 @@ export const usersMock = [
     username: "igor",
     password: "82954",
     role: "participant",
-    points: 0
+    points: 0,
+    avatarUrl: "./src/assets/fotos-perfil/igor.jpeg"
   },
   {
     id: 5,
@@ -37,7 +41,8 @@ export const usersMock = [
     username: "cesar",
     password: "37462",
     role: "participant",
-    points: 0
+    points: 0,
+    avatarUrl: "./src/assets/fotos-perfil/cesar.jpeg"
   },
   {
     id: 6,
@@ -45,7 +50,8 @@ export const usersMock = [
     username: "valerio",
     password: "95036",
     role: "participant",
-    points: 0
+    points: 0,
+    avatarUrl: "./src/assets/fotos-perfil/valerio.jpeg"
   },
   {
     id: 7,
@@ -53,7 +59,8 @@ export const usersMock = [
     username: "tx",
     password: "61873",
     role: "participant",
-    points: 0
+    points: 0,
+    avatarUrl: "./src/assets/fotos-perfil/tx.jpeg"
   },
   {
     id: 8,
@@ -61,7 +68,8 @@ export const usersMock = [
     username: "ze",
     password: "24785",
     role: "participant",
-    points: 0
+    points: 0,
+    avatarUrl: "./src/assets/fotos-perfil/ze.jpeg"
   },
   {
     id: 9,
@@ -69,7 +77,8 @@ export const usersMock = [
     username: "renato",
     password: "59314",
     role: "participant",
-    points: 0
+    points: 0,
+    avatarUrl: "./src/assets/fotos-perfil/renato.jpeg"
   },
   {
     id: 999,

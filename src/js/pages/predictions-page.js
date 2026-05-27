@@ -17,6 +17,7 @@ import {
 } from "../utils/date-utils.js";
 
 import { showToast } from "../components/toast.js";
+import { teamFlagsMock } from "../data/team-flags.mock.js";
 
 const logoutButton = document.querySelector("#logoutButton");
 const themeToggle = document.querySelector("#themeToggle");
@@ -55,6 +56,33 @@ function getTeamName(match, side) {
   }
 
   return match.awayTeam || match.awayPlaceholder || "A definir";
+}
+
+function getTeamFlagUrl(teamName) {
+  const flagCode = teamFlagsMock[teamName];
+
+  if (!flagCode) {
+    return "";
+  }
+
+  return `https://flagcdn.com/w40/${flagCode}.png`;
+}
+
+function createFlagImage(teamName) {
+  const flagUrl = getTeamFlagUrl(teamName);
+
+  if (!flagUrl) {
+    return "";
+  }
+
+  return `
+    <img
+      class="match-card__flag"
+      src="${flagUrl}"
+      alt="Bandeira de ${teamName}"
+      loading="lazy"
+    >
+  `;
 }
 
 function isMatchReadyForPrediction(match) {
@@ -103,6 +131,12 @@ function createMatchCard(match) {
   const homeValue = prediction?.homeScore ?? "";
   const awayValue = prediction?.awayScore ?? "";
 
+  const homeTeamName = getTeamName(match, "home");
+  const awayTeamName = getTeamName(match, "away");
+
+  const homeFlag = createFlagImage(homeTeamName);
+  const awayFlag = createFlagImage(awayTeamName);
+
   const lockedReason = !matchReady
     ? "Times ainda não definidos"
     : "Palpite bloqueado pelo horário";
@@ -141,29 +175,37 @@ function createMatchCard(match) {
           <p class="match-card__status">Seu palpite</p>
         </div>
 
-        <div class="match-card__score-inputs">
-          <input
-            type="number"
-            min="0"
-            max="99"
-            name="homeScore"
-            value="${homeValue}"
-            ${isLocked ? "disabled" : ""}
-            required
-          >
+      <div class="match-card__score-inputs">
+        <span class="match-card__flag-slot">
+          ${homeFlag}
+        </span>
 
-          <span>x</span>
+        <input
+          type="number"
+          min="0"
+          max="99"
+          name="homeScore"
+          value="${homeValue}"
+          ${isLocked ? "disabled" : ""}
+          required
+        >
 
-          <input
-            type="number"
-            min="0"
-            max="99"
-            name="awayScore"
-            value="${awayValue}"
-            ${isLocked ? "disabled" : ""}
-            required
-          >
-        </div>
+        <span class="match-card__score-separator">x</span>
+
+        <input
+          type="number"
+          min="0"
+          max="99"
+          name="awayScore"
+          value="${awayValue}"
+          ${isLocked ? "disabled" : ""}
+          required
+        >
+
+        <span class="match-card__flag-slot">
+          ${awayFlag}
+        </span>
+      </div>
 
         <button class="button button--primary" type="submit" ${isLocked ? "disabled" : ""}>
           Salvar palpite

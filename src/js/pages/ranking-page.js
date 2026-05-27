@@ -9,6 +9,27 @@ const rankingTableBody = document.querySelector("#rankingTableBody");
 
 let currentUser = null;
 
+function createAvatarHtml(participant, modifier = "") {
+  if (participant.avatarUrl) {
+    return `
+      <img
+        class="ranking-avatar ${modifier}"
+        src="${participant.avatarUrl}"
+        alt="Foto de ${participant.name}"
+        loading="lazy"
+      >
+    `;
+  }
+
+  const initial = participant.name.charAt(0).toUpperCase();
+
+  return `
+    <span class="ranking-avatar ranking-avatar--fallback ${modifier}">
+      ${initial}
+    </span>
+  `;
+}
+
 function applySavedTheme() {
   const savedTheme = getTheme();
 
@@ -57,6 +78,10 @@ function renderPodium(ranking) {
           ${getMedalByPosition(position)}
         </div>
 
+        <div class="podium-card__avatar">
+          ${createAvatarHtml(participant, "ranking-avatar--podium")}
+        </div>
+
         <h2 class="podium-card__name">
           ${participant.name}
         </h2>
@@ -88,8 +113,14 @@ function renderRankingTable(ranking) {
 
         <td>
           <div class="ranking-table__participant">
-            <strong>${participant.name}</strong>
-            <span>${participant.role === "admin" ? "Administrador" : "Participante"}</span>
+            <div class="ranking-user">
+              ${createAvatarHtml(participant)}
+
+              <div>
+                <strong>${participant.name}</strong>
+                <span>${participant.role === "admin" ? "Administrador" : "Participante"}</span>
+              </div>
+            </div>
           </div>
         </td>
 
