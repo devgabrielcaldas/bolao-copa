@@ -220,15 +220,17 @@
 }
 
 .ranking-avatar--podium {
-  width: 4.25rem;
-  height: 4.25rem;
+  width: 8.75rem;
+  height: 8.75rem;
   margin: 0 auto;
+  border-radius: 1rem;
+  object-fit: cover;
 }
 
 .podium-card__avatar {
   display: flex;
   justify-content: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 720px) {
@@ -238,8 +240,9 @@
   }
 
   .ranking-avatar--podium {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 8.5rem;
+    height: 8.5rem;
+    border-radius: 0.9rem;
   }
 }
 
