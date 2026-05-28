@@ -93,24 +93,13 @@ function getFilteredMatches() {
 function createPredictionRow(user, matchPredictions) {
   const prediction = getUserPredictionForMatch(user.id, matchPredictions);
 
-  if (!prediction) {
-    return `
-      <article class="community-prediction">
-        <<div class="community-prediction__user">
-          ${createCommunityAvatarHtml(user)}
+  const predictionScore = prediction
+    ? `${prediction.homeScore} x ${prediction.awayScore}`
+    : "Não palpitou";
 
-          <div>
-            <strong>${user.name}</strong>
-            <span>Participante</span>
-          </div>
-        </div>
-
-        <strong class="community-prediction__score community-prediction__empty">
-          Não palpitou
-        </strong>
-      </article>
-    `;
-  }
+  const scoreClass = prediction
+    ? "community-prediction__score"
+    : "community-prediction__score community-prediction__empty";
 
   return `
     <article class="community-prediction">
@@ -123,8 +112,8 @@ function createPredictionRow(user, matchPredictions) {
         </div>
       </div>
 
-      <strong class="community-prediction__score">
-        ${prediction.homeScore} x ${prediction.awayScore}
+      <strong class="${scoreClass}">
+        ${predictionScore}
       </strong>
     </article>
   `;

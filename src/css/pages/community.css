@@ -229,10 +229,12 @@
 }
 
 .community-prediction__score {
+  margin-left: auto;
   font-size: 1.1rem;
   font-weight: 900;
   color: var(--color-primary);
   white-space: nowrap;
+  text-align: right;
 }
 
 .community-prediction__empty {
@@ -263,6 +265,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
 }
 
 .community-prediction__user > div {
@@ -349,6 +352,6 @@
   }
 
   .community-prediction {
-    align-items: flex-start;
+    align-items: center;
   }
 }
