@@ -2,6 +2,7 @@ import { logout, requireAuth } from "../services/auth-service.js";
 import { getTheme, saveTheme } from "../utils/storage-utils.js";
 import { getUsersProfiles } from "../services/users-profile-service.js";
 import { formatMatchDate } from "../utils/date-utils.js";
+import { teamFlagsMock } from "../data/team-flags.mock.js";
 
 const logoutButton = document.querySelector("#logoutButton");
 const themeToggle = document.querySelector("#themeToggle");
@@ -47,6 +48,45 @@ function createAvatarHtml(user) {
 
 function getRoleLabel(role) {
   return role === "admin" ? "Administrador" : "Participante";
+}
+
+function getTeamFlagUrl(teamName) {
+  const flagCode = teamFlagsMock[teamName];
+
+  if (!flagCode) {
+    return "";
+  }
+
+  return `https://flagcdn.com/24x18/${flagCode}.png`;
+}
+
+function createGroupPositionFlagHtml(teamName, position) {
+  const flagUrl = getTeamFlagUrl(teamName);
+
+  if (!flagUrl) {
+    return `
+      <span class="users-group-position">
+        <strong>${position}º</strong>
+        <span class="users-group-position__name">${teamName}</span>
+      </span>
+    `;
+  }
+
+  return `
+    <span
+      class="users-group-position"
+      title="${position}º ${teamName}"
+      aria-label="${position}º ${teamName}"
+    >
+      <strong>${position}º</strong>
+      <img
+        class="users-flag"
+        src="${flagUrl}"
+        alt="${teamName}"
+        loading="lazy"
+      >
+    </span>
+  `;
 }
 
 function createSpecialSection(profile) {
@@ -102,9 +142,11 @@ function createGroupLine(groupPrediction) {
     <article class="users-group-line">
       <strong>${groupPrediction.groupCode}</strong>
 
-      <span>
-        1º ${positions[0]} | 2º ${positions[1]} | 3º ${positions[2]} | 4º ${positions[3]}
-      </span>
+      <div class="users-group-positions">
+        ${positions.map((teamName, index) => {
+          return createGroupPositionFlagHtml(teamName, index + 1);
+        }).join("")}
+      </div>
     </article>
   `;
 }
