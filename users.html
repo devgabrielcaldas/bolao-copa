@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Bolão da Copa | Dashboard</title>
+  <title>Bolão da Copa | Usuários</title>
   <link rel="icon" type="image/png" href="./src/assets/bola.png?v=2">
   <link rel="apple-touch-icon" href="./src/assets/bola.png?v=2">
 
@@ -21,8 +21,10 @@
 
   <link rel="stylesheet" href="./src/css/components/button.css">
   <link rel="stylesheet" href="./src/css/components/card.css">
+  <link rel="stylesheet" href="./src/css/components/toast.css">
 
   <link rel="stylesheet" href="./src/css/pages/dashboard.css">
+  <link rel="stylesheet" href="./src/css/pages/users.css">
 </head>
 
 <body>
@@ -34,13 +36,13 @@
       </div>
 
       <nav class="sidebar__nav">
-        <a href="./dashboard.html" class="sidebar__link sidebar__link--active">Dashboard</a>
+        <a href="./dashboard.html" class="sidebar__link">Dashboard</a>
         <a href="./predictions.html" class="sidebar__link">Meus palpites</a>
         <a href="./groups.html" class="sidebar__link">Grupos</a>
         <a href="./special-predictions.html" class="sidebar__link">Especiais</a>
         <a href="./ranking.html" class="sidebar__link">Ranking</a>
         <a href="./community.html" class="sidebar__link">Comunidade</a>
-        <a href="./users.html" class="sidebar__link">Usuários</a>
+        <a href="./users.html" class="sidebar__link sidebar__link--active">Usuários</a>
         <a href="./admin.html" class="sidebar__link">Admin</a>
       </nav>
 
@@ -49,11 +51,14 @@
       </button>
     </aside>
 
-    <main class="dashboard">
-      <header class="dashboard__header">
+    <main class="users-page">
+      <header class="users-header">
         <div>
-          <p class="dashboard__eyebrow">Bem-vindo de volta</p>
-          <h1 id="welcomeTitle">Olá!</h1>
+          <p class="dashboard__eyebrow">Perfis do bolão</p>
+          <h1>Usuários</h1>
+          <p>
+            Veja os palpites liberados de cada participante. Palpites futuros continuam escondidos para evitar cola.
+          </p>
         </div>
 
         <button id="themeToggle" class="button button--ghost">
@@ -61,56 +66,18 @@
         </button>
       </header>
 
-      <section class="dashboard__hero card">
-        <div>
-          <span class="dashboard__badge">Copa do Mundo 2026</span>
-          <h2>Seu painel do bolão</h2>
-          <p>
-            Acompanhe seus pontos, próximos jogos e sua posição no ranking geral.
-          </p>
-        </div>
-
-        <div class="dashboard__score">
-          <span id="userPoints">0</span>
-          <small>pontos</small>
-        </div>
+      <section class="users-info card">
+        <span>🔒</span>
+        <p>
+          Só aparecem apostas especiais, grupos e jogos que já bloquearam ou já começaram. Nada futuro é exibido.
+        </p>
       </section>
 
-      <section class="dashboard__cards">
-        <article class="card stat-card">
-          <span class="stat-card__label">Posição atual</span>
-          <strong>#4</strong>
-          <p>Ranking geral</p>
-        </article>
-
-        <article class="card stat-card">
-          <span class="stat-card__label">Palpites feitos</span>
-          <strong>0</strong>
-          <p>Jogos preenchidos</p>
-        </article>
-
-        <article class="card stat-card">
-          <span class="stat-card__label">Placares exatos</span>
-          <strong>0</strong>
-          <p>Acertos perfeitos</p>
-        </article>
-      </section>
-
-      <section class="card next-match">
-        <div>
-          <span class="next-match__label">Próximo jogo</span>
-          <h3>Brasil x Marrocos</h3>
-          <p>Grupo A · 18/06/2026 · 16:00</p>
-        </div>
-
-        <a href="./predictions.html" class="button button--primary">
-          Fazer palpite
-        </a>
-      </section>
+      <section id="usersList" class="users-list"></section>
     </main>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="./src/js/pages/dashboard-page.js?v=2"></script>
+  <script type="module" src="./src/js/pages/users-page.js"></script>
 </body>
 </html>
