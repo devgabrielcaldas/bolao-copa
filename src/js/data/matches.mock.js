@@ -286,7 +286,7 @@ export const matchesMock = [
     group: "Grupo K",
     homeTeam: "Uzbequistão",
     awayTeam: "Colômbia",
-    startsAt: "2026-06-17T21:00:00",
+    startsAt: "2026-06-17T23:00:00",
     homeScore: null,
     awayScore: null,
     status: "scheduled"

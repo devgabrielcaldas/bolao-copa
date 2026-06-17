@@ -89,6 +89,17 @@ function isMatchReadyForPrediction(match) {
   return Boolean(match.homeTeam && match.awayTeam);
 }
 
+function isMatchToday(match) {
+  const today = new Date();
+  const matchDate = new Date(match.startsAt);
+
+  return (
+    today.getFullYear() === matchDate.getFullYear() &&
+    today.getMonth() === matchDate.getMonth() &&
+    today.getDate() === matchDate.getDate()
+  );
+}
+
 function getPredictionByMatchId(matchId) {
   return userPredictions.find((prediction) => {
     return Number(prediction.matchId) === Number(matchId);
@@ -101,9 +112,14 @@ function getFilteredMatches() {
       currentGroupFilter === "all" || match.group === currentGroupFilter;
 
     const matchesRound =
-      currentRoundFilter === "all" || String(match.round) === currentRoundFilter;
+      currentRoundFilter === "all" ||
+      currentRoundFilter === "today" ||
+      String(match.round) === currentRoundFilter;
 
-    return matchesGroup && matchesRound;
+    const matchesToday =
+      currentRoundFilter !== "today" || isMatchToday(match);
+
+    return matchesGroup && matchesRound && matchesToday;
   });
 }
 
