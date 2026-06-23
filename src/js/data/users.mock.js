@@ -8,15 +8,15 @@ export const usersMock = [
     points: 0,
     avatarUrl: "./src/assets/fotos-perfil/gabriel.jpeg"
   },
-  {
-    id: 2,
-    name: "Yan",
-    username: "yan",
-    password: "73518",
-    role: "participant",
-    points: 0,
-    avatarUrl: "./src/assets/fotos-perfil/yan.jpeg"
-  },
+  // {
+  //   id: 2,
+  //   name: "Yan",
+  //   username: "yan",
+  //   password: "73518",
+  //   role: "participant",
+  //   points: 0,
+  //   avatarUrl: "./src/assets/fotos-perfil/yan.jpeg"
+  // },
   {
     id: 3,
     name: "Leonardo",

@@ -15,6 +15,7 @@ const themeToggle = document.querySelector("#themeToggle");
 const communityList = document.querySelector("#communityList");
 
 const groupFilterButtons = document.querySelectorAll("[data-group]");
+const dateFilterButtons = document.querySelectorAll("[data-date]");
 const statusFilterButtons = document.querySelectorAll("[data-status]");
 
 let currentUser = null;
@@ -22,6 +23,7 @@ let communityPredictions = [];
 let communityUsers = [];
 
 let currentGroupFilter = "all";
+let currentDateFilter = "all";
 let currentStatusFilter = "all";
 
 function createCommunityAvatarHtml(user) {
@@ -74,6 +76,17 @@ function hasMatchStarted(match) {
   return now >= matchDate;
 }
 
+function isMatchToday(match) {
+  const today = new Date();
+  const matchDate = new Date(match.startsAt);
+
+  return (
+    today.getFullYear() === matchDate.getFullYear() &&
+    today.getMonth() === matchDate.getMonth() &&
+    today.getDate() === matchDate.getDate()
+  );
+}
+
 function getFilteredMatches() {
   return matchesMock.filter((match) => {
     const matchStarted = hasMatchStarted(match);
@@ -81,12 +94,16 @@ function getFilteredMatches() {
     const matchesGroup =
       currentGroupFilter === "all" || match.group === currentGroupFilter;
 
+    const matchesDate =
+      currentDateFilter === "all" ||
+      (currentDateFilter === "today" && isMatchToday(match));
+
     const matchesStatus =
       currentStatusFilter === "all" ||
       (currentStatusFilter === "available" && matchStarted) ||
       (currentStatusFilter === "locked" && !matchStarted);
 
-    return matchesGroup && matchesStatus;
+    return matchesGroup && matchesDate && matchesStatus;
   });
 }
 
@@ -233,6 +250,20 @@ function handleGroupFilterClick(event) {
   renderCommunity();
 }
 
+function handleDateFilterClick(event) {
+  const selectedButton = event.currentTarget;
+
+  dateFilterButtons.forEach((button) => {
+    button.classList.remove("is-active");
+  });
+
+  selectedButton.classList.add("is-active");
+
+  currentDateFilter = selectedButton.dataset.date;
+
+  renderCommunity();
+}
+
 function handleStatusFilterClick(event) {
   const selectedButton = event.currentTarget;
 
@@ -282,6 +313,10 @@ async function initCommunityPage() {
 
   groupFilterButtons.forEach((button) => {
     button.addEventListener("click", handleGroupFilterClick);
+  });
+
+  dateFilterButtons.forEach((button) => {
+    button.addEventListener("click", handleDateFilterClick);
   });
 
   statusFilterButtons.forEach((button) => {
