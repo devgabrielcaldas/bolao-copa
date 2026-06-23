@@ -252,14 +252,20 @@ function handleGroupFilterClick(event) {
 
 function handleDateFilterClick(event) {
   const selectedButton = event.currentTarget;
+  const selectedDate = selectedButton.dataset.date;
 
-  dateFilterButtons.forEach((button) => {
-    button.classList.remove("is-active");
-  });
+  if (currentDateFilter === selectedDate) {
+    currentDateFilter = "all";
+    selectedButton.classList.remove("is-active");
+  } else {
+    currentDateFilter = selectedDate;
 
-  selectedButton.classList.add("is-active");
+    dateFilterButtons.forEach((button) => {
+      button.classList.remove("is-active");
+    });
 
-  currentDateFilter = selectedButton.dataset.date;
+    selectedButton.classList.add("is-active");
+  }
 
   renderCommunity();
 }
