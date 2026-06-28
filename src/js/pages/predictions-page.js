@@ -100,6 +100,34 @@ function isMatchToday(match) {
   );
 }
 
+function getMatchPhaseLabel(match) {
+  if (match.stageLabel) {
+    return match.stageLabel;
+  }
+
+  if (match.group && match.round) {
+    return `${match.group} · ${match.round}ª rodada`;
+  }
+
+  return match.group || "Mata-mata";
+}
+
+function getMatchContextLabel(match) {
+  if (match.stageLabel) {
+    return match.stageLabel;
+  }
+
+  return match.group || "Mata-mata";
+}
+
+function getMatchFilterValue(match) {
+  if (match.stage) {
+    return match.stage;
+  }
+
+  return String(match.round);
+}
+
 function getPredictionByMatchId(matchId) {
   return userPredictions.find((prediction) => {
     return Number(prediction.matchId) === Number(matchId);
@@ -114,7 +142,7 @@ function getFilteredMatches() {
     const matchesRound =
       currentRoundFilter === "all" ||
       currentRoundFilter === "today" ||
-      String(match.round) === currentRoundFilter;
+      getMatchFilterValue(match) === currentRoundFilter;
 
     const matchesToday =
       currentRoundFilter !== "today" || isMatchToday(match);
@@ -162,9 +190,12 @@ function createMatchCard(match) {
       <div class="match-card__top">
         <div>
           <span class="match-card__phase">
-            ${match.group} · ${match.round}ª rodada
+            ${getMatchPhaseLabel(match)}
           </span>
-          <p class="match-card__date">${formatMatchDate(match.startsAt)}</p>
+
+          <p class="match-card__date">
+            ${formatMatchDate(match.startsAt)}
+          </p>
         </div>
 
         <p class="match-card__status">
@@ -175,14 +206,14 @@ function createMatchCard(match) {
       <div class="match-card__teams">
         <div class="match-card__team">
           <strong>${getTeamName(match, "home")}</strong>
-          <span>${match.group || "Mata-mata"}</span>
+          <span>${getMatchContextLabel(match)}</span>
         </div>
 
         <div class="match-card__versus">x</div>
 
         <div class="match-card__team">
           <strong>${getTeamName(match, "away")}</strong>
-          <span>${match.group || "Mata-mata"}</span>
+          <span>${getMatchContextLabel(match)}</span>
         </div>
       </div>
 
@@ -191,37 +222,37 @@ function createMatchCard(match) {
           <p class="match-card__status">Seu palpite</p>
         </div>
 
-      <div class="match-card__score-inputs">
-        <span class="match-card__flag-slot">
-          ${homeFlag}
-        </span>
+        <div class="match-card__score-inputs">
+          <span class="match-card__flag-slot">
+            ${homeFlag}
+          </span>
 
-        <input
-          type="number"
-          min="0"
-          max="99"
-          name="homeScore"
-          value="${homeValue}"
-          ${isLocked ? "disabled" : ""}
-          required
-        >
+          <input
+            type="number"
+            min="0"
+            max="99"
+            name="homeScore"
+            value="${homeValue}"
+            ${isLocked ? "disabled" : ""}
+            required
+          >
 
-        <span class="match-card__score-separator">x</span>
+          <span class="match-card__score-separator">x</span>
 
-        <input
-          type="number"
-          min="0"
-          max="99"
-          name="awayScore"
-          value="${awayValue}"
-          ${isLocked ? "disabled" : ""}
-          required
-        >
+          <input
+            type="number"
+            min="0"
+            max="99"
+            name="awayScore"
+            value="${awayValue}"
+            ${isLocked ? "disabled" : ""}
+            required
+          >
 
-        <span class="match-card__flag-slot">
-          ${awayFlag}
-        </span>
-      </div>
+          <span class="match-card__flag-slot">
+            ${awayFlag}
+          </span>
+        </div>
 
         <button class="button button--primary" type="submit" ${isLocked ? "disabled" : ""}>
           Salvar palpite
@@ -264,7 +295,9 @@ async function handleSavePrediction(event) {
 
   const form = event.currentTarget;
   const matchId = Number(form.dataset.matchForm);
-  const match = matchesMock.find((item) => item.id === matchId);
+  const match = matchesMock.find((item) => {
+    return Number(item.id) === Number(matchId);
+  });
 
   if (!match) {
     showToast("Jogo não encontrado.", "error");
@@ -324,6 +357,10 @@ function handleGroupFilterClick(event) {
 function handleRoundFilterClick(event) {
   const selectedButton = event.currentTarget;
 
+  if (selectedButton.disabled) {
+    return;
+  }
+
   roundFilterButtons.forEach((button) => {
     button.classList.remove("is-active");
   });
@@ -352,10 +389,22 @@ async function initPredictionsPage() {
     </div>
   `;
 
-  await loadUserPredictions();
+  try {
+    await loadUserPredictions();
 
-  renderSummary();
-  renderMatches();
+    renderSummary();
+    renderMatches();
+  } catch (error) {
+    console.error("Erro ao carregar palpites:", error);
+
+    matchesList.innerHTML = `
+      <div class="card empty-state">
+        <span>⚠️</span>
+        <h3>Erro ao carregar jogos</h3>
+        <p>Não foi possível buscar seus palpites agora.</p>
+      </div>
+    `;
+  }
 
   logoutButton.addEventListener("click", logout);
   themeToggle.addEventListener("click", toggleTheme);
