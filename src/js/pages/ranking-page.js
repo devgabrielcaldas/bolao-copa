@@ -131,6 +131,7 @@ function renderRankingTable(ranking) {
         </td>
 
         <td>${participant.matchPoints}</td>
+        <td>${participant.knockoutPoints || 0}</td>
         <td>${participant.exactScores}</td>
         <td>${participant.correctOutcomes}</td>
         <td>${participant.groupPoints}</td>
@@ -165,7 +166,7 @@ async function initRankingPage() {
 
   rankingTableBody.innerHTML = `
     <tr>
-      <td colspan="8">
+      <td colspan="9">
         Carregando classificação...
       </td>
     </tr>

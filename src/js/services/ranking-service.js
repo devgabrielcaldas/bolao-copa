@@ -26,6 +26,7 @@ function createEmptyUserStats(user) {
     avatarUrl: user.avatarUrl || "",
     totalPoints: 0,
     matchPoints: 0,
+    knockoutPoints: 0,
     groupPoints: 0,
     specialPoints: 0,
     exactScores: 0,
@@ -76,6 +77,12 @@ function calculateUserMatchStats(userPredictions, matchesMap) {
 
       accumulator.matchPoints += result.points;
 
+      const isKnockoutMatch = match?.phase === "knockout" || Boolean(match?.stage);
+
+      if (isKnockoutMatch) {
+        accumulator.knockoutPoints += result.points;
+      }
+
       if (result.isExactScore) {
         accumulator.exactScores += 1;
       }
@@ -88,6 +95,7 @@ function calculateUserMatchStats(userPredictions, matchesMap) {
     },
     {
       matchPoints: 0,
+      knockoutPoints: 0,
       exactScores: 0,
       correctOutcomes: 0
     }
@@ -221,6 +229,7 @@ export async function getRanking() {
         avatarUrl: user.avatarUrl || "",
         totalPoints,
         matchPoints: matchStats.matchPoints,
+        knockoutPoints: matchStats.knockoutPoints,
         groupPoints: groupStats.groupPoints,
         specialPoints: specialStats.total,
         exactScores: matchStats.exactScores,
