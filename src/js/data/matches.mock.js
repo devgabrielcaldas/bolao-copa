@@ -1220,5 +1220,61 @@ export const matchesMock = [
     homeScore: null,
     awayScore: null,
     status: "scheduled"
+  },
+    {
+    id: 97,
+    phase: "knockout",
+    stage: "quarterfinals",
+    stageLabel: "Quartas",
+    round: null,
+    group: "Mata-mata",
+    homeTeam: "França",
+    awayTeam: "Marrocos",
+    startsAt: "2026-07-09T17:00:00",
+    homeScore: null,
+    awayScore: null,
+    status: "scheduled"
+  },
+  {
+    id: 98,
+    phase: "knockout",
+    stage: "quarterfinals",
+    stageLabel: "Quartas",
+    round: null,
+    group: "Mata-mata",
+    homeTeam: "Espanha",
+    awayTeam: "Bélgica",
+    startsAt: "2026-07-10T16:00:00",
+    homeScore: null,
+    awayScore: null,
+    status: "scheduled"
+  },
+  {
+    id: 99,
+    phase: "knockout",
+    stage: "quarterfinals",
+    stageLabel: "Quartas",
+    round: null,
+    group: "Mata-mata",
+    homeTeam: "Noruega",
+    awayTeam: "Inglaterra",
+    startsAt: "2026-07-11T18:00:00",
+    homeScore: null,
+    awayScore: null,
+    status: "scheduled"
+  },
+  {
+    id: 100,
+    phase: "knockout",
+    stage: "quarterfinals",
+    stageLabel: "Quartas",
+    round: null,
+    group: "Mata-mata",
+    homeTeam: "Argentina",
+    awayTeam: "Suíça",
+    startsAt: "2026-07-11T22:00:00",
+    homeScore: null,
+    awayScore: null,
+    status: "scheduled"
   }
 ];
