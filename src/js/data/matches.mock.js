@@ -1276,5 +1276,33 @@ export const matchesMock = [
     homeScore: null,
     awayScore: null,
     status: "scheduled"
+  },
+    {
+    id: 101,
+    phase: "knockout",
+    stage: "semifinals",
+    stageLabel: "Semi",
+    round: null,
+    group: "Mata-mata",
+    homeTeam: "França",
+    awayTeam: "Espanha",
+    startsAt: "2026-07-14T16:00:00",
+    homeScore: null,
+    awayScore: null,
+    status: "scheduled"
+  },
+  {
+    id: 102,
+    phase: "knockout",
+    stage: "semifinals",
+    stageLabel: "Semi",
+    round: null,
+    group: "Mata-mata",
+    homeTeam: "Inglaterra",
+    awayTeam: "Argentina",
+    startsAt: "2026-07-15T16:00:00",
+    homeScore: null,
+    awayScore: null,
+    status: "scheduled"
   }
 ];
